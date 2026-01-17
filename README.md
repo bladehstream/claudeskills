@@ -16,6 +16,7 @@ cd claudeskills
 |-----------|-------------|
 | `config/` | Global configuration files (CLAUDE.md) |
 | `skills/` | User-developed skills |
+| `commands/` | Custom slash commands |
 | `manifest.yaml` | Plugin and marketplace inventory |
 | `bootstrap.sh` | Automated setup script |
 
@@ -30,23 +31,65 @@ Custom skills developed locally:
 - Web automation skills (browser-automation, web-research-agent, etc.)
 - HTML5 game development workflow
 
+### User Commands
+Custom slash commands for workflow automation:
+- `/handoff` - Generate a context handoff document before clearing
+- `/resume` - Load handoff document after clearing to restore context
+
 ### Plugins (from marketplaces)
 Installed from official and community marketplaces:
 - superpowers, episodic-memory (superpowers-marketplace)
 - frontend-design, feature-dev, code-review, etc. (claude-plugins-official)
 - document-skills (anthropic-agent-skills)
 
+## Context Management with Handoff/Resume
+
+Long Claude Code sessions can suffer from "context rot" where performance degrades as the context window fills with noise, dead ends, and outdated information. The `/handoff` and `/resume` commands provide a structured way to clear context while preserving essential state.
+
+### Workflow
+
+```
+/handoff  →  /clear  →  /resume
+```
+
+1. **`/handoff`** - Generates a comprehensive context document at `.claude/handoff.md` containing:
+   - Current objective and architectural context
+   - Work completed and remaining
+   - Discovered constraints and rejected approaches
+   - Current state (git, tests, processes)
+   - A resumption prompt for the fresh instance
+
+2. **`/clear`** - Built-in Claude Code command that clears the context window
+
+3. **`/resume`** - Loads the handoff document, internalizes the state, and continues work
+
+### When to Use
+
+- **MID_TASK**: Context is degrading, work is incomplete
+- **TASK_COMPLETE**: Clean handoff to next phase
+- **CHECKPOINT**: Before risky operations
+- **SESSION_END**: Ending for now, will resume later
+
+### Design Notes
+
+- **Explicit user intent**: Three separate commands ensure deliberate action at each step
+- **Auto-cleanup**: The handoff file is deleted after successful resume to prevent stale reloads
+- **Not hooks**: SessionStart hooks fire on ALL sessions and can't reliably distinguish post-clear resume from new sessions
+
 ## Maintaining Skills
 
 ### Syncing Local Changes to This Repo
 
-When you create or modify skills on your development machine:
+When you create or modify skills or commands on your development machine:
 
 ```bash
 cd /path/to/claudeskills
 
 # Sync all skills
 cp -r ~/.claude/skills/* skills/
+
+# Sync all commands
+cp -r ~/.claude/commands/* commands/
 
 # Sync CLAUDE.md if changed
 cp ~/.claude/CLAUDE.md config/
@@ -83,6 +126,7 @@ Or manually copy specific updates:
 ```bash
 git pull
 cp -r skills/* ~/.claude/skills/
+cp -r commands/* ~/.claude/commands/
 cp config/CLAUDE.md ~/.claude/CLAUDE.md
 ```
 

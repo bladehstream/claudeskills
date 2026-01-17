@@ -32,3 +32,8 @@ skills:
   # All skills in skills/ directory are copied to ~/.claude/skills/
   source: skills/
   target: ~/.claude/skills/
+
+commands:
+  # All commands in commands/ directory are copied to ~/.claude/commands/
+  source: commands/
+  target: ~/.claude/commands/

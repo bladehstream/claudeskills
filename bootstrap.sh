@@ -14,18 +14,19 @@ echo ""
 
 # Ensure Claude directory exists
 mkdir -p "$CLAUDE_DIR/skills"
+mkdir -p "$CLAUDE_DIR/commands"
 
 # Copy CLAUDE.md
 if [ -f "$SCRIPT_DIR/config/CLAUDE.md" ]; then
-    echo "[1/3] Installing CLAUDE.md..."
+    echo "[1/4] Installing CLAUDE.md..."
     cp "$SCRIPT_DIR/config/CLAUDE.md" "$CLAUDE_DIR/CLAUDE.md"
     echo "      -> $CLAUDE_DIR/CLAUDE.md"
 else
-    echo "[1/3] CLAUDE.md not found, skipping..."
+    echo "[1/4] CLAUDE.md not found, skipping..."
 fi
 
 # Copy skills
-echo "[2/3] Installing skills..."
+echo "[2/4] Installing skills..."
 if [ -d "$SCRIPT_DIR/skills" ]; then
     cp -r "$SCRIPT_DIR/skills/"* "$CLAUDE_DIR/skills/" 2>/dev/null || true
     echo "      -> Copied $(ls -1 "$SCRIPT_DIR/skills" | wc -l) skills to $CLAUDE_DIR/skills/"
@@ -33,8 +34,17 @@ else
     echo "      -> No skills directory found"
 fi
 
+# Copy commands
+echo "[3/4] Installing commands..."
+if [ -d "$SCRIPT_DIR/commands" ]; then
+    cp -r "$SCRIPT_DIR/commands/"* "$CLAUDE_DIR/commands/" 2>/dev/null || true
+    echo "      -> Copied $(ls -1 "$SCRIPT_DIR/commands" | wc -l) commands to $CLAUDE_DIR/commands/"
+else
+    echo "      -> No commands directory found"
+fi
+
 # Install plugins
-echo "[3/3] Installing plugins..."
+echo "[4/4] Installing plugins..."
 echo "      Note: Requires 'claude' CLI to be installed and authenticated"
 echo ""
 
@@ -92,6 +102,7 @@ echo ""
 echo "Installed:"
 echo "  - CLAUDE.md (global instructions)"
 echo "  - $(ls -1 "$CLAUDE_DIR/skills" 2>/dev/null | wc -l) user skills"
+echo "  - $(ls -1 "$CLAUDE_DIR/commands" 2>/dev/null | wc -l) user commands"
 echo "  - ${#PLUGINS[@]} plugins"
 echo ""
 echo "Note: Some plugins may require additional configuration (API keys, etc.)"
