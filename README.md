@@ -33,8 +33,8 @@ Custom skills developed locally:
 
 ### User Commands
 Custom slash commands for workflow automation:
-- `/handoff` - Generate a context handoff document before clearing
-- `/resume` - Load handoff document after clearing to restore context
+- `/handoff [session-name]` - Generate a context handoff document before clearing
+- `/resume [session-name] [--keep]` - Load handoff document after clearing to restore context
 
 ### Plugins (from marketplaces)
 Installed from official and community marketplaces:
@@ -49,19 +49,24 @@ Long Claude Code sessions can suffer from "context rot" where performance degrad
 ### Workflow
 
 ```
-/handoff  →  /clear  →  /resume
+/handoff [session-name]  →  /clear  →  /resume [session-name]
 ```
 
-1. **`/handoff`** - Generates a comprehensive context document at `.claude/handoff.md` containing:
+1. **`/handoff [session-name]`** - Generates a comprehensive context document containing:
    - Current objective and architectural context
    - Work completed and remaining
    - Discovered constraints and rejected approaches
    - Current state (git, tests, processes)
    - A resumption prompt for the fresh instance
 
+   Output location:
+   - With session name: `.claude/handoffs/handoff-{session-name}.md`
+   - Without session name: `.claude/handoffs/handoff.md`
+
 2. **`/clear`** - Built-in Claude Code command that clears the context window
 
-3. **`/resume`** - Loads the handoff document, internalizes the state, and continues work
+3. **`/resume [session-name] [--keep]`** - Loads the handoff document, internalizes the state, and continues work
+   - Use `--keep` to preserve the handoff file after loading (useful for debugging or re-resuming)
 
 ### When to Use
 
@@ -70,10 +75,29 @@ Long Claude Code sessions can suffer from "context rot" where performance degrad
 - **CHECKPOINT**: Before risky operations
 - **SESSION_END**: Ending for now, will resume later
 
+### Multi-Session Support
+
+Named sessions allow parallel workstreams without collision:
+
+```bash
+# Working on feature A
+/handoff feature-a
+/clear
+
+# Start working on feature B
+/handoff feature-b
+/clear
+
+# Resume either session independently
+/resume feature-a
+/resume feature-b
+```
+
 ### Design Notes
 
 - **Explicit user intent**: Three separate commands ensure deliberate action at each step
-- **Auto-cleanup**: The handoff file is deleted after successful resume to prevent stale reloads
+- **Auto-cleanup**: The handoff file is deleted after successful resume to prevent stale reloads (use `--keep` to override)
+- **Isolated storage**: Handoff files live in `.claude/handoffs/` to prevent accidental deletion of other config files
 - **Not hooks**: SessionStart hooks fire on ALL sessions and can't reliably distinguish post-clear resume from new sessions
 
 ## Maintaining Skills
