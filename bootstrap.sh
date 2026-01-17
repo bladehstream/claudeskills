@@ -63,12 +63,15 @@ claude plugin install code-review@claude-plugins-official
 claude plugin install security-guidance@claude-plugins-official
 claude plugin install agent-sdk-dev@claude-plugins-official
 claude plugin install pr-review-toolkit@claude-plugins-official
-claude plugin install linear@claude-plugins-official
 claude plugin install plugin-dev@claude-plugins-official
-claude plugin install hookify@claude-plugins-official
-claude plugin install greptile@claude-plugins-official
+claude plugin install commit-commands@claude-plugins-official
+claude plugin install typescript-lsp@claude-plugins-official
+claude plugin install ralph-wiggum@claude-plugins-official
+claude plugin install pyright-lsp@claude-plugins-official
+claude plugin install php-lsp@claude-plugins-official
+claude plugin install jdtls-lsp@claude-plugins-official
+claude plugin install playwright@claude-plugins-official
 claude plugin install document-skills@anthropic-agent-skills
-claude plugin install episodic-memory@superpowers-marketplace
 EOF
     echo ""
     exit 0
@@ -83,12 +86,15 @@ PLUGINS=(
     "security-guidance@claude-plugins-official"
     "agent-sdk-dev@claude-plugins-official"
     "pr-review-toolkit@claude-plugins-official"
-    "linear@claude-plugins-official"
     "plugin-dev@claude-plugins-official"
-    "hookify@claude-plugins-official"
-    "greptile@claude-plugins-official"
+    "commit-commands@claude-plugins-official"
+    "typescript-lsp@claude-plugins-official"
+    "ralph-wiggum@claude-plugins-official"
+    "pyright-lsp@claude-plugins-official"
+    "php-lsp@claude-plugins-official"
+    "jdtls-lsp@claude-plugins-official"
+    "playwright@claude-plugins-official"
     "document-skills@anthropic-agent-skills"
-    "episodic-memory@superpowers-marketplace"
 )
 
 for plugin in "${PLUGINS[@]}"; do
