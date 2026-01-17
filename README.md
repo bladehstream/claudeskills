@@ -35,6 +35,7 @@ Custom skills developed locally:
 Custom slash commands for workflow automation:
 - `/handoff [session-name]` - Generate a context handoff document before clearing
 - `/resume [session-name] [--keep]` - Load handoff document after clearing to restore context
+- `/whatis [path|github-url]` - Analyze a project and explain its purpose, architecture, interfaces, and languages
 
 ### Plugins (from marketplaces)
 Installed from official and community marketplaces:
@@ -99,6 +100,35 @@ Named sessions allow parallel workstreams without collision:
 - **Auto-cleanup**: The handoff file is deleted after successful resume to prevent stale reloads (use `--keep` to override)
 - **Isolated storage**: Handoff files live in `.claude/handoffs/` to prevent accidental deletion of other config files
 - **Not hooks**: SessionStart hooks fire on ALL sessions and can't reliably distinguish post-clear resume from new sessions
+
+## Quick Project Understanding with /whatis
+
+The `/whatis` command provides rapid context about any project, useful when:
+- Starting work on an unfamiliar codebase
+- Quickly understanding a GitHub repository before cloning
+- Seeding context at the start of a session
+
+### Usage
+
+```bash
+# Analyze current directory
+/whatis
+
+# Analyze a local path
+/whatis /path/to/project
+
+# Analyze a GitHub repository (clones to /tmp)
+/whatis https://github.com/owner/repo
+/whatis github.com/owner/repo
+```
+
+### Output
+
+Returns a structured summary with four sections:
+- **Purpose**: What the project does and why it exists
+- **Architecture**: High-level structure, modules, and design patterns
+- **Interfaces**: How users/systems interact (APIs, CLIs, UIs, libraries)
+- **Languages & Stack**: Technologies, frameworks, and dependencies
 
 ## Maintaining Skills
 
