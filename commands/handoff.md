@@ -1,8 +1,11 @@
 ---
-description: Generate a context handoff document before running /clear. Saves to .claude/handoff.md for later resumption with /resume.
+argument-hint: [session-name]
+description: Generate a context handoff document before running /clear. Optionally name the session for multi-session support.
 ---
 
 # Context Handoff
+
+**Session name (optional):** $1
 
 I need to clear your context. Before I do, generate a comprehensive handoff document that will allow a fresh Claude instance to resume this work seamlessly.
 
@@ -58,5 +61,10 @@ Write the exact prompt to paste after /resume. Start with "Continue working on..
 
 **Output instructions:**
 1. Create the `.claude` directory if it doesn't exist
-2. Write the complete handoff to `.claude/handoff.md`
-3. Confirm the file was written and remind the user to run `/clear` followed by `/resume` when ready to continue
+2. Determine the output file path:
+   - If a session name was provided: `.claude/handoff-{session-name}.md`
+   - If no session name: `.claude/handoff.md`
+3. Write the complete handoff to the determined path
+4. Confirm the file was written and remind the user:
+   - If named session: run `/clear` followed by `/resume {session-name}` when ready to continue
+   - If default session: run `/clear` followed by `/resume` when ready to continue

@@ -1,29 +1,40 @@
 ---
-description: Load a previously saved handoff document after /clear to resume work with full context.
+argument-hint: [session-name] [--keep]
+description: Resume from a handoff. Optionally specify session name. Use --keep to preserve the handoff file.
 ---
 
 # Resume from Handoff
+
+**Arguments provided:** $ARGUMENTS
 
 Load and process the handoff document from a previous session.
 
 **Instructions:**
 
-1. Read the file `.claude/handoff.md`
+1. Parse the arguments:
+   - Extract session name (if any word not starting with `--`)
+   - Check for `--keep` flag
 
-2. If the file doesn't exist, inform the user:
-   - "No handoff file found at `.claude/handoff.md`"
-   - "Run `/handoff` before `/clear` to create one"
+2. Determine the handoff file path:
+   - If a session name was provided: `.claude/handoff-{session-name}.md`
+   - If no session name: `.claude/handoff.md`
+
+3. Read the handoff file
+
+4. If the file doesn't exist, inform the user:
+   - "No handoff file found at `{path}`"
+   - "Run `/handoff` or `/handoff {session-name}` before `/clear` to create one"
    - Ask if they want to describe what they were working on instead
 
-3. If the file exists:
+5. If the file exists:
    - Parse and internalize all sections
    - Acknowledge the scenario (MID_TASK, TASK_COMPLETE, CHECKPOINT, or SESSION_END)
    - Summarize the objective and current state in 2-3 sentences
    - List the immediate next steps from WORK REMAINING
    - Note any OPEN QUESTIONS that need resolution
-   - Execute the RESUMPTION PROMPT to continue work
 
-4. After successfully loading, delete the handoff file to prevent stale reloads:
-   - `rm .claude/handoff.md`
+6. Handle file cleanup:
+   - If `--keep` flag was provided: leave the handoff file in place
+   - If `--keep` flag was NOT provided: delete the handoff file to prevent stale reloads
 
-5. Begin work immediately based on the resumption prompt unless there are blocking open questions
+7. Execute the RESUMPTION PROMPT to continue work (unless there are blocking open questions)
