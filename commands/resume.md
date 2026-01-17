@@ -16,8 +16,8 @@ Load and process the handoff document from a previous session.
    - Check for `--keep` flag
 
 2. Determine the handoff file path:
-   - If a session name was provided: `.claude/handoff-{session-name}.md`
-   - If no session name: `.claude/handoff.md`
+   - If a session name was provided: `.claude/handoffs/handoff-{session-name}.md`
+   - If no session name: `.claude/handoffs/handoff.md`
 
 3. Read the handoff file
 
